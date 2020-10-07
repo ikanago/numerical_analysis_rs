@@ -50,7 +50,7 @@ where
 {
     let mid = (left + right) / 2.0;
     if function(mid).abs() < acceptable_error {
-        return Ok(mid);
+        Ok(mid)
     } else if function(left) * function(mid) < 0.0 {
         bisection_rec(function, left, mid, acceptable_error)
     } else {
