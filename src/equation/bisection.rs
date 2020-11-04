@@ -61,7 +61,7 @@ where
 #[cfg(test)]
 mod tests {
     use crate::assert_almost_eq;
-    use crate::equation::bisection::*;
+    use super::*;
     const ACCEPTABLE_ERROR: f64 = 1e-6;
 
     #[test]
