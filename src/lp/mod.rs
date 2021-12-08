@@ -1,15 +1,30 @@
+pub mod tableau;
+
 use thiserror::Error;
 
 #[derive(Error, Debug, PartialEq, Eq)]
 pub enum LinearProblemError {
     #[error("Objective function is required")]
     ObjectiveRequired,
+    #[error("Problem is unbound")]
+    Unbound,
 }
 
 #[derive(Debug)]
-pub struct LinearProblem<const NV: usize> {
+pub struct LinearProblem {
     constraints: Vec<Constraint>,
     objective: Objective,
+}
+
+impl LinearProblem {
+    pub fn builder<const NV: usize>() -> LinearProblemBuilder<NV> {
+        assert_ne!(NV, 0);
+        LinearProblemBuilder::default()
+    }
+
+    pub fn n_constraints(&self) -> usize {
+        self.constraints.len()
+    }
 }
 
 #[derive(Debug, Default)]
@@ -35,13 +50,11 @@ impl<const NV: usize> LinearProblemBuilder<NV> {
     }
 
     pub fn objective(mut self, coefs: [f64; NV]) -> LinearProblemBuilder<NV> {
-        self.objective = Some(Objective {
-            coefs: coefs.into(),
-        });
+        self.objective = Some(Objective::new(coefs.into()));
         self
     }
 
-    pub fn build(self) -> Result<LinearProblem<NV>, LinearProblemError> {
+    pub fn build(self) -> Result<LinearProblem, LinearProblemError> {
         match self.objective {
             Some(objective) => Ok(LinearProblem {
                 constraints: self.constraints,
@@ -65,6 +78,13 @@ pub enum ConstraintKind {
 }
 
 #[derive(Debug)]
-struct Objective {
+pub(crate) struct Objective {
     coefs: Vec<f64>,
+    rhs: f64,
+}
+
+impl Objective {
+    fn new(coefs: Vec<f64>) -> Self {
+        Self { coefs, rhs: 0.0 }
+    }
 }
