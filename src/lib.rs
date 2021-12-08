@@ -1,4 +1,5 @@
 pub mod equation;
+pub mod lp;
 
 #[macro_export]
 macro_rules! assert_almost_eq {
