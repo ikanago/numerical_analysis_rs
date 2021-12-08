@@ -60,8 +60,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::assert_almost_eq;
     use super::*;
+    use crate::assert_almost_eq;
     const ACCEPTABLE_ERROR: f64 = 1e-6;
 
     #[test]
